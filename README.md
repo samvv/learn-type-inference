@@ -10,8 +10,8 @@ increase in complexity.
 
 ## Tutorials
 
- - [Hindley-Milner type inference][https://github.com/samvv/learn-type-inference/tree/master/tutorials/01-simple-hindley-milner]
- - [Optimising Hindley-Milner type inference][https://github.com/samvv/learn-type-inference/tree/master/tutorials/02-optimising-hindley-milner]
+ - [Hindley-Milner type inference](https://github.com/samvv/learn-type-inference/tree/master/tutorials/01-simple-hindley-milner)
+ - [Optimising Hindley-Milner type inference](https://github.com/samvv/learn-type-inference/tree/master/tutorials/02-optimising-hindley-milner)
 
 ## Compiler Library
 
