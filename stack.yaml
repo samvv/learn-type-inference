@@ -30,6 +30,7 @@ resolver:
 #   - auto-update
 #   - wai
 packages:
+- complib
 - tutorials/01-simple-hindley-milner
 - tutorials/02-optimising-hindley-milner
 
