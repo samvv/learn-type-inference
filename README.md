@@ -20,15 +20,6 @@ them. Always think critical, and take what you read with a grain of salt._
 [tut01]: https://github.com/samvv/learn-type-inference/tree/master/tutorials/01-simple-hindley-milner
 [tut02]: https://github.com/xnning/EvEff
 
-## Compiler Library
-
-To support the tutorials and potentially make it easier to create new
-languages, this repository contains [a separate package][complib] that does
-some of the heavy lifting. It contains generic helpers to structure the code,
-parser combinators and more.
-
-[complib]: https://github.com/samvv/learn-type-inference/tree/master/complib
-
 ## Thank You
 
 This repository wouldn't be possible without the following excellent materials:
