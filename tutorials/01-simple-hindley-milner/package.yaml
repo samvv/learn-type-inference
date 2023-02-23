@@ -31,6 +31,8 @@ library:
   - bytestring
   - megaparsec
   - text
+  - containers
+  - eveff
 
 executables:
   main:
@@ -56,3 +58,5 @@ tests:
     - text
     - hspec
     - QuickCheck
+    - eveff
+

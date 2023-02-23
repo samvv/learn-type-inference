@@ -6,14 +6,12 @@ import Language.Toy.AST
 import Language.Toy.Types
 import Text.Megaparsec.Error (ParseErrorBundle)
 
-data TypeWithLoc
-  = TypeWithLoc Type Span
-  deriving (Show)
-
 data Diagnostic
-  = OccursCheck TypeWithLoc
+  = OccursCheck
+  | BindingNotFound
+  | UnificationError
   | ParseDiagnostics (ParseErrorBundle T.Text Void)
-  deriving (Show)
+  deriving (Show, Eq)
 
 type DiagnosticBundle = [Diagnostic]
 

@@ -16,7 +16,7 @@ data Expr
   = Let BS.ByteString Expr Expr
   | Ref BS.ByteString
   | App Expr Expr
-  | Abs BS.ByteString Expr
+  | Lam BS.ByteString Expr
   | Const Value
   deriving (Show, Eq)
 

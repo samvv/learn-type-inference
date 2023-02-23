@@ -3,7 +3,14 @@
 # For more information, please see the documentation at:
 #   https://docs.haskellstack.org/en/stable/lock_files
 
-packages: []
+packages:
+- completed:
+    hackage: eveff-1.0.0.2@sha256:935ea6bf71e694a6e5f7548201b97acddbfd5191a716a1ba6ddee1d360031ceb,1232
+    pantry-tree:
+      sha256: b32e015ba845a061685bc8f10368d634b82e45c7d2a509c102e5971b63166669
+      size: 494
+  original:
+    hackage: eveff-1.0.0.2
 snapshots:
 - completed:
     sha256: adbc602422dde10cc330175da7de8609e70afc41449a7e2d6e8b1827aa0e5008
