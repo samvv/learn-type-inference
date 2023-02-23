@@ -23,26 +23,28 @@ them. Always think critical, and take what you read with a grain of salt._
 ## Compiler Library
 
 To support the tutorials and potentially make it easier to create new
-languages, this repository contains [a separate package][1] that does some of
-the heavy lifting. It contains generic helpers to structure the code, parser
-combinators and more.
+languages, this repository contains [a separate package][complib] that does
+some of the heavy lifting. It contains generic helpers to structure the code,
+parser combinators and more.
 
-[1]: https://github.com/samvv/learn-type-inference/tree/master/complib
+[complib]: https://github.com/samvv/learn-type-inference/tree/master/complib
 
 ## Thank You
 
 This repository wouldn't be possible without the following excellent materials:
 
- - [Write You A HAskell][2] by Stephen Diehl provided much of the boilerplate
+ - [Write You A HAskell][ref1] by Stephen Diehl provided much of the boilerplate
    for the classical Hindley-Milner code as well as some essential hints on how
    the algorithm works in specific cases.
- - [EvEff][3] by Ningning Xie for providing a very clean implementation of
+ - [EvEff][ref2] by Ningning Xie for providing a very clean implementation of
    algebraic effects, making it that much easier to combine monad-like
    computations.
+ - [Typing Haskell in Haskell][ref3] by Mark P. Jones contains an essential
+   overview of Haskell's type system. 
 
-
-[2]: https://github.com/sdiehl/write-you-a-haskell
-[3]: https://github.com/xnning/EvEff
+[ref1]: https://github.com/sdiehl/write-you-a-haskell
+[ref2]: https://github.com/xnning/EvEff
+[ref3]: https://web.cecs.pdx.edu/~mpj/thih/
 
 ## License
 
