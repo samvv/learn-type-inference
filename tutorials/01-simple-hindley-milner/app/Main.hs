@@ -6,11 +6,13 @@ import Control.Monad.State
 import System.Console.Repline
 import qualified Data.Text as T
 
+import Language.Toy.Pretty
 import Language.Toy.Compiler
 import Language.Toy.Frontend (fParse, fInfer)
 import Language.Toy.Parser (pExpr)
 import qualified Language.Toy.TypeEnv as TE
 import Language.Toy.Infer (inferExpr)
+import qualified Data.Text.IO as TIO
 
 data ReplState = RS { count :: Int, env :: TE.TypeEnv }
 
@@ -29,7 +31,7 @@ cmd input = do s <- get
                   CompileFailure ds -> output $ "parse error: " <> show ds
                   CompileSuccess ds expr -> case fInfer (env s) expr of
                     CompileFailure ds -> output $ "type-checking error: " <> show ds
-                    CompileSuccess ds scm -> output $ show scm
+                    CompileSuccess ds scm -> lift $ liftIO $ TIO.putStrLn $ pretty scm
 
 final :: Repl ExitDecision
 final

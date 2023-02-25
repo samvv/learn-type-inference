@@ -24,7 +24,9 @@ newtype InferState
       count :: Int
     }
 
-fresh :: (State InferState :? e) => Eff e Type
+type Infer = State InferState
+
+fresh :: (Infer :? e) => Eff e Type
 fresh
   = do s <- perform get ()
        let i = count s
@@ -43,7 +45,7 @@ fresh
 letters :: [String]
 letters = [1..] >>= flip replicateM ['a'..'z']
 
-runInfer :: (Except Diagnostic :? e) => Eff (State InferState :* e) (Subst, Type) -> Eff e Scheme
+runInfer :: (Except Diagnostic :? e) => Eff (Infer :* e) (Subst, Type) -> Eff e Scheme
 runInfer m 
   = do res <- state InferState { count = 0 } m
        pure $ closeOver res
@@ -71,13 +73,13 @@ normalize (Forall tvs body)
 mono :: Type -> Scheme
 mono = Forall []
 
-instantiate :: (State InferState :? e) => Scheme -> Eff e Type
+instantiate :: (Infer :? e) => Scheme -> Eff e Type
 instantiate (Forall tvs t) 
   = do tvs' <- mapM (const fresh) tvs
        let s = Map.fromList $ zip tvs tvs'
        pure $ apply s t
 
-infer :: (Except Diagnostic :? e, State InferState :? e) => TE.TypeEnv -> Expr -> Eff e (Subst, Type)
+infer :: (Except Diagnostic :? e, Infer :? e) => TE.TypeEnv -> Expr -> Eff e (Subst, Type)
 infer env expr  = case expr of
 
   Ref x -> case TE.lookup x env of
@@ -134,5 +136,5 @@ unify (TArrow a1 a2) (TArrow b1 b2)
 unify (TCon x) (TCon y) | x == y
   = pure Map.empty
 unify a b
-  = perform throwError UnificationError
+  = perform throwError (UnificationError a b)
 

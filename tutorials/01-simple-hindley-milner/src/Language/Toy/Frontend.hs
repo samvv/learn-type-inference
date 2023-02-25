@@ -21,3 +21,4 @@ fInfer :: TE.TypeEnv -> Expr -> CompileResult Scheme
 fInfer env x = case runEff $ exceptEither $ inferExpr env x of
   Left d -> CompileFailure [d]
   Right scm -> CompileSuccess [] scm
+

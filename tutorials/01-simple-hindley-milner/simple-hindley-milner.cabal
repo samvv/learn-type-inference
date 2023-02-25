@@ -30,6 +30,7 @@ library
       Language.Toy.Frontend
       Language.Toy.Infer
       Language.Toy.Parser
+      Language.Toy.Pretty
       Language.Toy.TypeEnv
       Language.Toy.Types
   other-modules:

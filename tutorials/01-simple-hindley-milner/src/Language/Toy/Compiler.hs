@@ -9,7 +9,7 @@ import Text.Megaparsec.Error (ParseErrorBundle)
 data Diagnostic
   = OccursCheck
   | BindingNotFound
-  | UnificationError
+  | UnificationError Type Type
   | ParseDiagnostics (ParseErrorBundle T.Text Void)
   deriving (Show, Eq)
 
