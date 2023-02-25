@@ -83,7 +83,7 @@ infer :: (Except Diagnostic :? e, Infer :? e) => TE.TypeEnv -> Expr -> Eff e (Su
 infer env expr  = case expr of
 
   Ref x -> case TE.lookup x env of
-    Nothing -> perform throwError BindingNotFound
+    Nothing -> perform throwError (BindingNotFound x)
     Just scm -> instantiate scm >>= \t -> pure (Map.empty, t)
 
   Lam x body -> do

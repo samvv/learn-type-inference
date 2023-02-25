@@ -21,16 +21,14 @@ type Repl a = HaskelineT (StateT ReplState IO) a
 ini :: Repl ()
 ini = lift $ liftIO $ putStrLn "Welcome!\nPress Ctrl+D to exit."
 
-output = lift . liftIO . putStrLn
-
 cmd :: String -> Repl ()
 cmd input = do s <- get
                lift $ put $ s { count = count s + 1 }
                let fname = "#<repl:" ++ show (count s) ++ ">"
                case fParse fname pExpr $ T.pack input of
-                  CompileFailure ds -> output $ "parse error: " <> show ds
+                  CompileFailure ds -> lift $ liftIO $ TIO.putStrLn $ pretty ds
                   CompileSuccess ds expr -> case fInfer (env s) expr of
-                    CompileFailure ds -> output $ "type-checking error: " <> show ds
+                    CompileFailure ds -> lift $ liftIO $ TIO.putStrLn $ pretty ds
                     CompileSuccess ds scm -> lift $ liftIO $ TIO.putStrLn $ pretty scm
 
 final :: Repl ExitDecision
