@@ -11,7 +11,7 @@ import Control.Ev.Util (exceptEither, Except)
 import Language.Toy.AST
 import Language.Toy.Compiler (Diagnostic(..), CompileResult(..))
 import Language.Toy.Frontend (fParse)
-import Language.Toy.Parser
+import Language.Toy.Parser (Parser, pExpr)
 import Language.Toy.Types
 import Language.Toy.Infer (inferExpr, Scheme(Forall))
 import qualified Language.Toy.TypeEnv as TE
