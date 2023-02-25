@@ -101,7 +101,6 @@ infer env expr  = case expr of
     (s1, t1) <- infer env e1
     let env' = apply s1 env
         t'   = generalize env' t1
-    traceM (show t')
     (s2, t2) <- infer (TE.add x t' env') e2
     return (s2 <> s1, t2)
 
@@ -135,5 +134,5 @@ unify (TArrow a1 a2) (TArrow b1 b2)
 unify (TCon x) (TCon y) | x == y
   = pure Map.empty
 unify a b
-  = perform throwError (trace (show b) UnificationError)
+  = perform throwError UnificationError
 
