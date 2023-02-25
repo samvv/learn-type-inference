@@ -8,7 +8,8 @@ The Hindley-Milner type inference algorithm is one of the most widely-used and
 easier to understand type inference algorithms. It was first discovered by J.
 Roger Hindley in his 1969 paper _The Principal Type-Scheme of an Object in
 Combinatory Logic_ and later opened up to a wider audience in 1982 by Robin
-Milner in the paper _Principal type-schemes for functional programs_.
+Milner and Luis Damas in the paper _Principal type-schemes for functional
+programs_.
 
 ## Running This Program
 
