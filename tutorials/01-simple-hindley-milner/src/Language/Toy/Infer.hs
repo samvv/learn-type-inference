@@ -19,8 +19,6 @@ import qualified Language.Toy.TypeEnv as TE
 import Language.Toy.AST
 import Language.Toy.Compiler
 
-import Debug.Trace
-
 newtype InferState
   = InferState {
       count :: Int
