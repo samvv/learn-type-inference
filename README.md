@@ -24,7 +24,7 @@ them. Always think critical, and take what you read with a grain of salt._
 
 This repository wouldn't be possible without the following excellent materials:
 
- - [Write You A HAskell][ref1] by Stephen Diehl provided much of the boilerplate
+ - [Write You A Haskell][ref1] by Stephen Diehl provided much of the boilerplate
    for the classical Hindley-Milner code as well as some essential hints on how
    the algorithm works in specific cases.
  - [EvEff][ref2] by Ningning Xie for providing a very clean implementation of
