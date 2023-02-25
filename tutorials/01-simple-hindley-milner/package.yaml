@@ -21,6 +21,9 @@ description:         Please see the README on GitHub at <https://github.com/samv
 
 dependencies:
 - base >= 4.7 && < 5
+- eveff
+- bytestring
+- text
 
 default-extensions:
 - OverloadedStrings
@@ -28,11 +31,8 @@ default-extensions:
 library:
   source-dirs: src
   dependencies:
-  - bytestring
   - megaparsec
-  - text
   - containers
-  - eveff
 
 executables:
   main:
@@ -44,6 +44,8 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - simple-hindley-milner
+    - repline
+    - mtl
 
 tests:
   simple-hindley-milner-test:
@@ -55,8 +57,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - simple-hindley-milner
-    - text
     - hspec
     - QuickCheck
-    - eveff
 
