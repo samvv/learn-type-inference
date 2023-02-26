@@ -31,5 +31,6 @@ instance Pretty Diagnostic where
   pretty (ParseDiagnostics bundle) = T.pack $ "parse error: " <> errorBundlePretty bundle
 
 instance Pretty a => Pretty [a] where
+  pretty [] = ""
   pretty [ x ] = pretty x
   pretty (h:t) = pretty h <> "\n" <> pretty t

@@ -1,22 +1,32 @@
+{-# LANGUAGE TypeOperators, FlexibleContexts, Rank2Types #-}
+
 module Language.Toy.Parser (
   Parser
 , pExpr
+, parse
 ) where
 
+import Control.Ev.Eff
 import Data.Char (isDigit)
 import Data.Void (Void)
-import Text.Megaparsec
+import Text.Megaparsec hiding (parse)
 import Text.Megaparsec.Char
+import Control.Monad.Combinators.Expr
 import qualified Data.Text as T
 import qualified Data.ByteString as BS
 import qualified Data.ByteString.Char8 as BSC
 import qualified Text.Megaparsec.Char.Lexer as L
 
-import Debug.Trace
-
+import Language.Toy.Compiler
 import Language.Toy.AST
 
 type Parser = Parsec Void T.Text
+
+parse :: (Compile :? e) => Parser a -> FilePath -> T.Text -> Eff e (Maybe a)
+parse p fname input
+  = case runParser p fname input of
+      Left errs -> diagnostic (ParseDiagnostics errs) >> pure Nothing
+      Right x -> pure $ Just x
 
 sc :: Parser ()
 sc = L.space
@@ -28,7 +38,7 @@ rword :: T.Text -> Parser ()
 rword w = string w *> notFollowedBy alphaNumChar *> sc
 
 rws :: [String] -- list of reserved words
-rws = ["in","if","then","else","true","false","not","and","or","let"]
+rws = ["in","if","then","else","true","false","let"]
 
 lexeme :: Parser a -> Parser a
 lexeme = L.lexeme sc
@@ -65,12 +75,21 @@ pLetExpr
        e2 <- pExpr
        pure $ Let name e1 e2
 
-pExpr
-  = do e1 <- pExpr'
-       es <- many pExpr'
+pExpr'
+  = do e1 <- pExpr''
+       es <- many pExpr''
        pure $ foldl App e1 es
 
-pExpr'
+symbol s = string s *> sc
+
+pExpr = makeExprParser pExpr' [
+    [ InfixL (symbol "*" >> pure (\x y -> App (App (Ref "*") x) y))
+    , InfixL (symbol "/" >> pure (\x y -> App (App (Ref "/") x) y)) ]
+  , [ InfixL (symbol "+" >> pure (\x y -> App (App (Ref "+") x) y))
+    , InfixL (symbol "-" >> pure (\x y -> App (App (Ref "-") x) y)) ]
+  ]
+
+pExpr''
   = pConstExpr
   <|> pRefExpr
   <|> pLetExpr

@@ -33,6 +33,7 @@ library:
   dependencies:
   - megaparsec
   - containers
+  - parser-combinators
 
 executables:
   main:

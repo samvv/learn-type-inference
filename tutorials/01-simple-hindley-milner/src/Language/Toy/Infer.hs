@@ -45,7 +45,7 @@ fresh
 letters :: [String]
 letters = [1..] >>= flip replicateM ['a'..'z']
 
-runInfer :: (Except Diagnostic :? e) => Eff (Infer :* e) (Subst, Type) -> Eff e Scheme
+runInfer :: (Compile :? e) => Eff (Infer :* e) (Subst, Type) -> Eff e Scheme
 runInfer m 
   = do res <- state InferState { count = 0 } m
        pure $ closeOver res
@@ -79,11 +79,13 @@ instantiate (Forall tvs t)
        let s = Map.fromList $ zip tvs tvs'
        pure $ apply s t
 
-infer :: (Except Diagnostic :? e, Infer :? e) => TE.TypeEnv -> Expr -> Eff e (Subst, Type)
+infer :: (Compile :? e, Infer :? e) => TE.TypeEnv -> Expr -> Eff e (Subst, Type)
 infer env expr  = case expr of
 
   Ref x -> case TE.lookup x env of
-    Nothing -> perform throwError (BindingNotFound x)
+    Nothing -> do diagnostic (BindingNotFound x)
+                  t <- fresh
+                  pure (Map.empty, t)
     Just scm -> instantiate scm >>= \t -> pure (Map.empty, t)
 
   Lam x body -> do
@@ -112,21 +114,22 @@ infer env expr  = case expr of
         valTy (VString _) = typeString
         valTy (VBool _) = typeBool
 
-inferExpr :: (Except Diagnostic :? e) => TE.TypeEnv -> Expr -> Eff e Scheme
+inferExpr :: (Compile :? e) => TE.TypeEnv -> Expr -> Eff e Scheme
 inferExpr te expr
   = runInfer $ infer te expr
 
 occursCheck a t = a `Set.member` ftv t
 
-bind :: (Except Diagnostic :? e) => TVar -> Type -> Eff e Subst
+bind :: (Compile :? e) => TVar -> Type -> Eff e Subst
 bind (TV x) (TVar (TV y)) | x == y
   = pure Map.empty
 bind tv ty | occursCheck tv ty
-  = perform throwError OccursCheck
+  = do diagnostic OccursCheck
+       pure Map.empty
 bind tv ty
   = pure $ Map.fromList [(tv, ty)]
 
-unify :: (Except Diagnostic :? e) => Type -> Type -> Eff e Subst
+unify :: (Compile :? e) => Type -> Type -> Eff e Subst
 unify (TVar x) ty = bind x ty
 unify ty (TVar x) = bind x ty
 unify (TArrow a1 a2) (TArrow b1 b2)
@@ -136,5 +139,7 @@ unify (TArrow a1 a2) (TArrow b1 b2)
 unify (TCon x) (TCon y) | x == y
   = pure Map.empty
 unify a b
-  = perform throwError (UnificationError a b)
+  = do diagnostic (UnificationError a b)
+       pure Map.empty
+   
 
