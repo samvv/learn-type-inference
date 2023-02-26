@@ -19,6 +19,8 @@ import qualified Text.Megaparsec.Char.Lexer as L
 
 import Language.Toy.Compiler
 import Language.Toy.AST
+import qualified Data.Text.Internal.Builder as T
+import Data.Text.Encoding (encodeUtf8)
 
 type Parser = Parsec Void T.Text
 
@@ -51,10 +53,29 @@ pIdentifier = BSC.pack <$> (lexeme . try) (p >>= check)
                 then fail $ "keyword " ++ show x ++ " cannot be an identifier"
                 else pure x
 
-pConstExpr :: Parser Expr
-pConstExpr
+pIntExpr :: Parser Expr
+pIntExpr
   = do digits <- takeWhile1P (Just "a digit") isDigit <* sc
        pure $ Const $ VInt (read $ T.unpack digits :: Integer)
+
+pBoolExpr :: Parser Expr
+pBoolExpr 
+  = try $ pTrue <|> pFalse
+  where pTrue = rword "true" >> pure (Const $ VBool True)
+        pFalse = rword "false" >> pure (Const $ VBool False)
+
+
+pStringExpr :: Parser Expr
+pStringExpr
+  = do single '\"'
+       cs <- many $ satisfy (/= '\"')
+       single '\"'
+       pure $ Const $ VString $ BSC.pack cs
+
+pConstExpr
+  = pIntExpr 
+  <|> pStringExpr
+  <|> pBoolExpr
 
 pRefExpr
   = Ref <$> pIdentifier
@@ -83,10 +104,10 @@ pExpr'
 symbol s = string s *> sc
 
 pExpr = makeExprParser pExpr' [
-    [ InfixL (symbol "*" >> pure (\x y -> App (App (Ref "*") x) y))
-    , InfixL (symbol "/" >> pure (\x y -> App (App (Ref "/") x) y)) ]
-  , [ InfixL (symbol "+" >> pure (\x y -> App (App (Ref "+") x) y))
-    , InfixL (symbol "-" >> pure (\x y -> App (App (Ref "-") x) y)) ]
+    [ InfixL (symbol "*" >> pure (App . App (Ref "*")))
+    , InfixL (symbol "/" >> pure (App . App (Ref "/"))) ]
+  , [ InfixL (symbol "+" >> pure (App . App (Ref "+")))
+    , InfixL (symbol "-" >> pure (App . App (Ref "-"))) ]
   ]
 
 pExpr''

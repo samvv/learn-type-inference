@@ -9,7 +9,7 @@ data Span
 data Value
   = VInt Integer
   | VBool Bool
-  | VString String
+  | VString BS.ByteString
   deriving (Show, Eq, Ord)
 
 data Expr
