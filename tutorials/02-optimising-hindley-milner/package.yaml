@@ -1,6 +1,6 @@
 name:                optimising-hindley-milner
 version:             0.1.0.0
-github:              "samvv/optimising-hindley-milner"
+github:              "samvv/learn-type-inference"
 license:             BSD3
 author:              "Sam Vervaeck"
 maintainer:          "samvv@pm.me"
@@ -17,16 +17,26 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/samvv/optimising-hindley-milner#readme>
+description:         Please see the README on GitHub at <https://github.com/samvv/learn-type-inference#readme>
 
 dependencies:
 - base >= 4.7 && < 5
+- eveff
+- bytestring
+- text
+
+default-extensions:
+- OverloadedStrings
 
 library:
   source-dirs: src
+  dependencies:
+  - megaparsec
+  - containers
+  - parser-combinators
 
 executables:
-  optimising-hindley-milner-exe:
+  main:
     main:                Main.hs
     source-dirs:         app
     ghc-options:
@@ -35,6 +45,8 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - optimising-hindley-milner
+    - repline
+    - mtl
 
 tests:
   optimising-hindley-milner-test:
@@ -46,3 +58,6 @@ tests:
     - -with-rtsopts=-N
     dependencies:
     - optimising-hindley-milner
+    - hspec
+    - QuickCheck
+

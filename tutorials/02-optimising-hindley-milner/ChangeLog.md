@@ -1,3 +1,3 @@
-# Changelog for optimising-hindley-milner
+# Changelog for simple-hindley-milner
 
 ## Unreleased changes
