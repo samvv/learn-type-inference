@@ -124,6 +124,7 @@ pExpr = makeExprParser pExpr' [
 pExpr'' :: Parser Expr
 pExpr''
   = pConstExpr
+  <|> single '(' *> sc *> pExpr <* single ')' <* sc
   <|> pRefExpr
   <|> try pLetExpr
   <|> pLamExpr

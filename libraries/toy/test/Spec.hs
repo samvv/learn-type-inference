@@ -41,4 +41,7 @@ main = hspec $ do
       testParse pToplevel "let x = 1" `shouldBe` Just (Def "x" (Const (VInt 1)))
     it "can parse a definition with some parameters" $ do
       testParse pToplevel "let add a b = a + b" `shouldBe` Just (Def "add" (Lam "a" (Lam "b" (App (App (Ref "+") (Ref "a")) (Ref "b")))))
+    it "can parse nested expressions" $ do
+      testParse pToplevel "(1)" `shouldBe` Just (Expr (Const (VInt 1)))
+      testParse pToplevel "f (let x = 1 in 2) x2" `shouldBe` Just (Expr (App (App (Ref "f") (Let "x" (Const (VInt 1)) (Const (VInt 2)))) (Ref "x2")))
 
