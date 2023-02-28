@@ -1,4 +1,4 @@
-{-# LANGUAGE TypeOperators, FlexibleContexts, Rank2Types #-}
+{-# LANGUAGE OverloadedStrings, TypeOperators, FlexibleContexts, Rank2Types #-}
 
 module Language.Toy.Parser (
   Parser
@@ -20,15 +20,18 @@ import qualified Text.Megaparsec.Char.Lexer as L
 
 import Language.Toy.Compiler
 import Language.Toy.AST
-import qualified Data.Text.Internal.Builder as T
-import Data.Text.Encoding (encodeUtf8)
 
 type Parser = Parsec Void T.Text
+
+newtype ParseDiagnostic = PD (ParseErrorBundle T.Text Void)
+
+instance Pretty ParseDiagnostic where
+  pretty (PD errs) = T.pack $ errorBundlePretty errs
 
 parse :: (Compile :? e) => Parser a -> FilePath -> T.Text -> Eff e (Maybe a)
 parse p fname input
   = case runParser p fname input of
-      Left errs -> diagnostic (ParseDiagnostics errs) >> pure Nothing
+      Left errs -> diagnostic (PD errs) >> pure Nothing
       Right x -> pure $ Just x
 
 sc :: Parser ()
@@ -68,41 +71,49 @@ pBoolExpr
 
 pStringExpr :: Parser Expr
 pStringExpr
-  = do single '\"'
+  = do _ <- single '\"'
        cs <- many $ satisfy (/= '\"')
-       single '\"'
+       _ <- single '\"'
        pure $ Const $ VString $ BSC.pack cs
 
+pConstExpr :: Parser Expr
 pConstExpr
   = pIntExpr 
   <|> pStringExpr
   <|> pBoolExpr
 
+pRefExpr :: Parser Expr
 pRefExpr
   = Ref <$> pIdentifier
 
+pLamExpr :: Parser Expr
 pLamExpr 
   = do single '\\' *> sc
-       param <- pIdentifier
+       ps <- some pIdentifier
        string "->" *> sc
-       Lam param <$> pExpr
+       e <- pExpr
+       pure $ foldr Lam e ps
 
+pLetExpr :: Parser Expr
 pLetExpr
   = do rword "let"
        name <- pIdentifier
+       ps <- many pIdentifier
        single '=' *> sc
        e1 <- pExpr
        rword "in" 
-       e2 <- pExpr
-       pure $ Let name e1 e2
+       Let name (foldr Lam e1 ps) <$> pExpr
 
+pExpr' :: Parser Expr
 pExpr'
   = do e1 <- pExpr''
        es <- many pExpr''
        pure $ foldl App e1 es
 
+symbol :: T.Text -> Parser ()
 symbol s = string s *> sc
 
+pExpr :: Parser Expr
 pExpr = makeExprParser pExpr' [
     [ InfixL (symbol "*" >> pure (App . App (Ref "*")))
     , InfixL (symbol "/" >> pure (App . App (Ref "/"))) ]
@@ -110,6 +121,7 @@ pExpr = makeExprParser pExpr' [
     , InfixL (symbol "-" >> pure (App . App (Ref "-"))) ]
   ]
 
+pExpr'' :: Parser Expr
 pExpr''
   = pConstExpr
   <|> pRefExpr
@@ -120,9 +132,12 @@ pDef :: Parser Toplevel
 pDef
   = do rword "let"
        name <- pIdentifier
+       ps <- many pIdentifier
        single '=' *> sc
-       Def name <$> pExpr
+       e <- pExpr
+       pure $ Def name $ foldr Lam e ps
 
+pToplevel :: Parser Toplevel
 pToplevel
   = Expr <$> pExpr
   <|> pDef

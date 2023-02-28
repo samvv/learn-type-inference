@@ -12,6 +12,11 @@ data Value
   | VString BS.ByteString
   deriving (Show, Eq, Ord)
 
+data Toplevel
+  = Def BS.ByteString Expr
+  | Expr Expr
+  deriving (Show, Eq)
+
 data Expr
   = Let BS.ByteString Expr Expr
   | Ref BS.ByteString

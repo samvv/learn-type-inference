@@ -17,7 +17,8 @@
 #
 # resolver: ./custom-snapshot.yaml
 # resolver: https://example.com/snapshots/2018-01-01.yaml
-resolver: lts-20.11
+resolver:
+  url: https://raw.githubusercontent.com/commercialhaskell/stackage-snapshots/master/lts/20/11.yaml
 
 # User packages to be built.
 # Various formats can be used as shown in the example below.
@@ -29,10 +30,7 @@ resolver: lts-20.11
 #   - auto-update
 #   - wai
 packages:
-- libraries/toy
-- tutorials/01-simple-hindley-milner
-- tutorials/02-optimising-hindley-milner
-
+- .
 # Dependency packages to be pulled from upstream that are not in the resolver.
 # These entries can reference officially published versions as well as
 # forks / in-progress versions pinned to a git hash. For example:
@@ -54,15 +52,15 @@ extra-deps:
 # Control whether we use the GHC we find on the path
 # system-ghc: true
 #
-# Require a specific version of stack, using version ranges
+# Require a specific version of Stack, using version ranges
 # require-stack-version: -any # Default
-# require-stack-version: ">=2.7"
+# require-stack-version: ">=2.9"
 #
-# Override the architecture used by stack, especially useful on Windows
+# Override the architecture used by Stack, especially useful on Windows
 # arch: i386
 # arch: x86_64
 #
-# Extra directories used by stack for building
+# Extra directories used by Stack for building
 # extra-include-dirs: [/path/to/dir]
 # extra-lib-dirs: [/path/to/dir]
 #

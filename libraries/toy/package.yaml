@@ -1,14 +1,14 @@
-name:                optimising-hindley-milner
+name:                toy
 version:             0.1.0.0
-github:              "samvv/learn-type-inference"
+github:              "samvv/toy"
 license:             BSD3
 author:              "Sam Vervaeck"
 maintainer:          "samvv@pm.me"
-copyright:           "Copyright Sam Vervaeck 2021"
+copyright:           "2023 Sam Vervaeck"
 
 extra-source-files:
 - README.md
-- ChangeLog.md
+- CHANGELOG.md
 
 # Metadata used when publishing your package
 # synopsis:            Short description of your package
@@ -17,17 +17,24 @@ extra-source-files:
 # To avoid duplicated efforts in documentation and dealing with the
 # complications of embedding Haddock markup inside cabal files, it is
 # common to point users to the README.md file.
-description:         Please see the README on GitHub at <https://github.com/samvv/learn-type-inference#readme>
+description:         Please see the README on GitHub at <https://github.com/samvv/toy#readme>
 
 dependencies:
 - base >= 4.7 && < 5
-- eveff
 - bytestring
 - text
-- toy
+- eveff
 
-default-extensions:
-- OverloadedStrings
+ghc-options:
+- -Wall
+- -Wcompat
+- -Widentities
+- -Wincomplete-record-updates
+- -Wincomplete-uni-patterns
+- -Wmissing-export-lists
+- -Wmissing-home-modules
+- -Wpartial-fields
+- -Wredundant-constraints
 
 library:
   source-dirs: src
@@ -35,22 +42,11 @@ library:
   - megaparsec
   - containers
   - parser-combinators
-
-executables:
-  main:
-    main:                Main.hs
-    source-dirs:         app
-    ghc-options:
-    - -threaded
-    - -rtsopts
-    - -with-rtsopts=-N
-    dependencies:
-    - optimising-hindley-milner
-    - repline
-    - mtl
+  - mtl
+  - repline
 
 tests:
-  optimising-hindley-milner-test:
+  toy-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -58,7 +54,6 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - optimising-hindley-milner
+    - toy
     - hspec
     - QuickCheck
-

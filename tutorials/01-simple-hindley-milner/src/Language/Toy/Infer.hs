@@ -1,8 +1,9 @@
 {-# LANGUAGE TypeOperators, FlexibleContexts, Rank2Types #-}
 
 module Language.Toy.Infer (
-  inferExpr,
-  Scheme(..)
+  inferExpr
+, inferToplevel
+, Scheme(..)
 ) where 
 
 import qualified Data.Set as Set
@@ -113,6 +114,14 @@ infer env expr  = case expr of
   where valTy (VInt _) = typeInt
         valTy (VString _) = typeString
         valTy (VBool _) = typeBool
+
+inferToplevel :: (Compile :? e) => Toplevel -> TE.TypeEnv -> Eff e (TE.TypeEnv, Scheme)
+inferToplevel (Def name e) env
+  = do scm <- inferExpr env e
+       pure (TE.add name scm env, scm)
+inferToplevel (Expr e) env
+  = do scm <- inferExpr env e
+       pure (env, scm)
 
 inferExpr :: (Compile :? e) => TE.TypeEnv -> Expr -> Eff e Scheme
 inferExpr te expr

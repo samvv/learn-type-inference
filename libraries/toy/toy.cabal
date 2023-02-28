@@ -1,0 +1,65 @@
+cabal-version: 1.12
+
+-- This file has been generated from package.yaml by hpack version 0.35.1.
+--
+-- see: https://github.com/sol/hpack
+
+name:           toy
+version:        0.1.0.0
+description:    Please see the README on GitHub at <https://github.com/samvv/toy#readme>
+homepage:       https://github.com/samvv/toy#readme
+bug-reports:    https://github.com/samvv/toy/issues
+author:         Sam Vervaeck
+maintainer:     samvv@pm.me
+copyright:      2023 Sam Vervaeck
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+extra-source-files:
+    README.md
+    CHANGELOG.md
+
+source-repository head
+  type: git
+  location: https://github.com/samvv/toy
+
+library
+  exposed-modules:
+      Language.Toy.AST
+      Language.Toy.CLI
+      Language.Toy.Compiler
+      Language.Toy.Parser
+  other-modules:
+      Paths_toy
+  hs-source-dirs:
+      src
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints
+  build-depends:
+      base >=4.7 && <5
+    , bytestring
+    , containers
+    , eveff
+    , megaparsec
+    , mtl
+    , parser-combinators
+    , repline
+    , text
+  default-language: Haskell2010
+
+test-suite toy-test
+  type: exitcode-stdio-1.0
+  main-is: Spec.hs
+  other-modules:
+      Paths_toy
+  hs-source-dirs:
+      test
+  ghc-options: -Wall -Wcompat -Widentities -Wincomplete-record-updates -Wincomplete-uni-patterns -Wmissing-export-lists -Wmissing-home-modules -Wpartial-fields -Wredundant-constraints -threaded -rtsopts -with-rtsopts=-N
+  build-depends:
+      QuickCheck
+    , base >=4.7 && <5
+    , bytestring
+    , eveff
+    , hspec
+    , text
+    , toy
+  default-language: Haskell2010

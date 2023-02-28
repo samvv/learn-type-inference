@@ -25,11 +25,7 @@ source-repository head
 
 library
   exposed-modules:
-      Language.Toy.AST
-      Language.Toy.Compiler
       Language.Toy.Infer
-      Language.Toy.Parser
-      Language.Toy.Pretty
       Language.Toy.TypeEnv
       Language.Toy.Types
   other-modules:
@@ -43,9 +39,8 @@ library
     , bytestring
     , containers
     , eveff
-    , megaparsec
-    , parser-combinators
     , text
+    , toy
   default-language: Haskell2010
 
 executable main
@@ -61,10 +56,9 @@ executable main
       base >=4.7 && <5
     , bytestring
     , eveff
-    , mtl
-    , repline
     , simple-hindley-milner
     , text
+    , toy
   default-language: Haskell2010
 
 test-suite simple-hindley-milner-test
@@ -85,4 +79,5 @@ test-suite simple-hindley-milner-test
     , hspec
     , simple-hindley-milner
     , text
+    , toy
   default-language: Haskell2010

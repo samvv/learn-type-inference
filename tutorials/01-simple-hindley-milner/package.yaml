@@ -24,6 +24,7 @@ dependencies:
 - eveff
 - bytestring
 - text
+- toy
 
 default-extensions:
 - OverloadedStrings
@@ -31,9 +32,7 @@ default-extensions:
 library:
   source-dirs: src
   dependencies:
-  - megaparsec
   - containers
-  - parser-combinators
 
 executables:
   main:
@@ -45,8 +44,6 @@ executables:
     - -with-rtsopts=-N
     dependencies:
     - simple-hindley-milner
-    - repline
-    - mtl
 
 tests:
   simple-hindley-milner-test:
