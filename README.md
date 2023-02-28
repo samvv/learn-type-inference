@@ -18,7 +18,7 @@ them. Always think critical, and take what you read with a grain of salt._
  - [Optimising Hindley-Milner type inference][tut02]
 
 [tut01]: https://github.com/samvv/learn-type-inference/tree/master/tutorials/01-simple-hindley-milner
-[tut02]: https://github.com/xnning/EvEff
+[tut02]: https://github.com/samvv/learn-type-inference/tree/master/tutorials/02-optimising-hindley-milner
 
 ## Thank You
 
