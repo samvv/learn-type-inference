@@ -16,9 +16,11 @@ them. Always think critical, and take what you read with a grain of salt._
 
  - [Hindley-Milner type inference][tut01]
  - [Optimising Hindley-Milner type inference][tut02]
+ - [Constraint-based Type Inference][tut03]
 
 [tut01]: https://github.com/samvv/learn-type-inference/tree/master/tutorials/01-simple-hindley-milner
 [tut02]: https://github.com/samvv/learn-type-inference/tree/master/tutorials/02-optimising-hindley-milner
+[tut03]: https://github.com/samvv/learn-type-inference/tree/master/tutorials/03-constraints
 
 ## Thank You
 
