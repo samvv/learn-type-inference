@@ -21,6 +21,7 @@ import Language.Toy.AST
 import Language.Toy.Compiler
 
 import Debug.Trace
+import Data.Data (typeOf)
 
 data InferState
   = InferState {
@@ -59,12 +60,15 @@ fresh
 letters :: [String]
 letters = [1..] >>= flip replicateM ['a'..'z']
 
-withInfer :: (Compile :? e) => Eff (Infer :* e) a -> Eff e (InferState, a)
-withInfer m
-  = state InferState { count = 0, constraints = [] } m'
-  where m' = do res <- m
+state' :: s -> Eff (State s :* e) a -> Eff e (s, a)
+state' a e = state a e'
+  where e' = do res <- e
                 s <- perform get ()
                 pure (s, res)
+
+withInfer :: (Compile :? e) => Eff (Infer :* e) a -> Eff e (InferState, a)
+withInfer
+  = state' InferState { count = 0, constraints = [] }
 
 closeOver :: Type -> Scheme
 closeOver ty = normalize scm
@@ -146,35 +150,44 @@ inferExpr te expr
        traceM (show sub)
        pure $ closeOver (apply sub scm)
 
+type Solve = State Subst
+
 solve :: (Compile :? e) => [Constraint] -> Eff e Subst
-solve [] = pure Map.empty
-solve (h:t) = do s1 <- f h
-                 s2 <- solve (apply s1 t)
-                 pure $ s2 <> s1
-  where f (CEqual t1 t2) = unify t1 t2
-        f CEmpty = pure Map.empty
+solve cs
+  = state' Map.empty (mapM eval cs) >>= pure . fst
+  where eval (CEqual t1 t2) = unify t1 t2
+        eval CEmpty = pure ()
 
 occursCheck :: TVar -> Type -> Bool
 occursCheck a t = a `Set.member` ftv t
 
-bind :: (Compile :? e) => TVar -> Type -> Eff e Subst
-bind (TV x) (TVar (TV y)) | x == y
-  = pure Map.empty
-bind tv ty | occursCheck tv ty
-  = diagnostic OccursCheck >> pure Map.empty
-bind tv ty
-  = pure $ Map.fromList [ ( tv, ty ) ]
+find :: (Solve :? e) => Type -> Eff e Type
+find k
+  = do s <- perform get ()
+       pure $ apply s k
 
-unify :: (Compile :? e) => Type -> Type -> Eff e Subst
-unify (TVar x) ty = bind x ty
-unify ty (TVar x) = bind x ty
-unify (TArrow a1 a2) (TArrow b1 b2)
-  = do s1 <- unify a1 b1
-       s2 <- unify (apply s1 a2) (apply s1 b2)
-       pure $ s2 <> s1
-unify (TCon x) (TCon y) | x == y
-  = pure Map.empty
-unify a b
-  = do diagnostic (UnificationError a b)
-       pure Map.empty
+bind :: (Compile :? e, Solve :? e) => TVar -> Type -> Eff e ()
+bind (TV x) (TVar (TV y)) | x == y
+  = return ()
+bind tv ty | occursCheck tv ty
+  = diagnostic OccursCheck
+bind tv ty
+  = do s <- perform get ()
+       perform put $ Map.insert tv ty s
+
+unify t1 t2
+  = do t1' <- find t1
+       t2' <- find t2
+       unify' t1' t2'
+
+unify' :: (Compile :? e, Solve :? e) => Type -> Type -> Eff e ()
+unify' (TVar x) ty = bind x ty
+unify' ty (TVar x) = bind x ty
+unify' (TArrow a1 a2) (TArrow b1 b2)
+  = do unify a1 b1
+       unify a2 b2
+unify' (TCon x) (TCon y) | x == y
+  = pure ()
+unify' a b
+  = diagnostic (UnificationError a b)
 
