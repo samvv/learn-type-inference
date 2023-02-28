@@ -1,4 +1,4 @@
-name:                optimising-hindley-milner
+name:                constraints
 version:             0.1.0.0
 github:              "samvv/learn-type-inference"
 license:             BSD3

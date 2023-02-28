@@ -4,7 +4,7 @@ cabal-version: 1.12
 --
 -- see: https://github.com/sol/hpack
 
-name:           optimising-hindley-milner
+name:           constraints
 version:        0.1.0.0
 description:    Please see the README on GitHub at <https://github.com/samvv/learn-type-inference#readme>
 homepage:       https://github.com/samvv/learn-type-inference#readme
@@ -29,7 +29,7 @@ library
       Language.Toy.TypeEnv
       Language.Toy.Types
   other-modules:
-      Paths_optimising_hindley_milner
+      Paths_constraints
   hs-source-dirs:
       src
   default-extensions:
@@ -48,7 +48,7 @@ library
 executable main
   main-is: Main.hs
   other-modules:
-      Paths_optimising_hindley_milner
+      Paths_constraints
   hs-source-dirs:
       app
   default-extensions:
@@ -69,7 +69,7 @@ test-suite optimising-hindley-milner-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
-      Paths_optimising_hindley_milner
+      Paths_constraints
   hs-source-dirs:
       test
   default-extensions:
