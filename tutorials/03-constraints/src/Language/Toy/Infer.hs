@@ -147,7 +147,6 @@ inferExpr :: (Compile :? e) => TE.TypeEnv -> Expr -> Eff e Scheme
 inferExpr te expr
   = do (s, scm) <- withInfer $ infer te expr
        sub <- solve (constraints s)
-       traceM (show sub)
        pure $ closeOver (apply sub scm)
 
 type Solve = State Subst

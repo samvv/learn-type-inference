@@ -45,12 +45,12 @@ executables:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - optimising-hindley-milner
+    - constraints
     - repline
     - mtl
 
 tests:
-  optimising-hindley-milner-test:
+  constraints-test:
     main:                Spec.hs
     source-dirs:         test
     ghc-options:
@@ -58,7 +58,7 @@ tests:
     - -rtsopts
     - -with-rtsopts=-N
     dependencies:
-    - optimising-hindley-milner
+    - constraints
     - hspec
     - QuickCheck
 

@@ -57,15 +57,15 @@ executable main
   build-depends:
       base >=4.7 && <5
     , bytestring
+    , constraints
     , eveff
     , mtl
-    , optimising-hindley-milner
     , repline
     , text
     , toy
   default-language: Haskell2010
 
-test-suite optimising-hindley-milner-test
+test-suite constraints-test
   type: exitcode-stdio-1.0
   main-is: Spec.hs
   other-modules:
@@ -79,9 +79,9 @@ test-suite optimising-hindley-milner-test
       QuickCheck
     , base >=4.7 && <5
     , bytestring
+    , constraints
     , eveff
     , hspec
-    , optimising-hindley-milner
     , text
     , toy
   default-language: Haskell2010
